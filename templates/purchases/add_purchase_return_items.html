@@ -1,0 +1,124 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Return Items</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <div class="sidebar">
+
+    <h2>Inventory System</h2>
+
+    <a href="/">Dashboard</a>
+
+    <a href="/products/list/">Products</a>
+    <a href="/products/add/">Add Product</a>
+    <a href="/products/stock-history/">Stock History</a>
+
+    <a href="/customers/list/">Customers</a>
+    <a href="/customers/add/">Add Customer</a>
+
+    <a href="/suppliers/list/">Suppliers</a>
+    <a href="/suppliers/add/">Add Supplier</a>
+
+    <a href="/purchases/list/">Purchase List</a>
+    <a href="/purchases/create/">Create Purchase</a>
+    <a href="/purchases/report/">Purchase Report</a>
+
+    <a href="/purchases/return/list/">Purchase Return History</a>
+    <a href="/purchases/return/create/">Create Purchase Return</a>
+    <a href="/purchases/return/report/">Purchase Return Report</a>
+
+    <a href="/purchases/payment/list/">Supplier Payment History</a>
+    <a href="/purchases/payment/report/">Supplier Payment Report</a>
+
+    <a href="/billing/">Billing</a>
+    <a href="/billing/create/">Create Bill</a>
+    <a href="/billing/history/">Bill History</a>
+
+    <a href="/admin/">Admin</a>
+
+</div>
+    <div class="main">
+
+        <h2>Add Purchase Return Items</h2>
+
+        <h3>Return ID: {{ purchase_return.id }}</h3>
+
+        <h3>Purchase ID: {{ purchase_return.purchase.id }}</h3>
+
+        <h3>Reason: {{ purchase_return.reason }}</h3>
+
+        <hr>
+
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <h3>Add Product to Return</h3>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit">
+                Add Return Item
+            </button>
+
+        </form>
+
+        <hr>
+
+        <h3>Returned Products</h3>
+
+        <table border="1" cellpadding="10">
+
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Return Price</th>
+                <th>Total</th>
+            </tr>
+
+            {% for item in purchase_return.items.all %}
+
+            <tr>
+                <td>{{ item.purchase_item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.return_price }}</td>
+                <td>{{ item.total_price }}</td>
+            </tr>
+
+            {% empty %}
+
+            <tr>
+                <td colspan="4">No return items added yet.</td>
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+        <h3>
+            Total Return Amount: ₹{{ purchase_return.total_amount }}
+        </h3>
+
+        <br>
+
+        <a href="{% url 'purchase_list' %}">
+            Back to Purchase List
+        </a>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,113 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Purchase Details</title>
+</head>
+<body>
+
+    <h2>Purchase Details</h2>
+
+    <h3>Supplier: {{ purchase.supplier.name }}</h3>
+
+    <h3>Purchase ID: {{ purchase.id }}</h3>
+
+    <h3>Payment Status: {{ purchase.payment_status }}</h3>
+
+    <h3>Purchase Amount: ₹{{ purchase.total_amount }}</h3>
+
+    <h3>Paid Amount: ₹{{ paid_amount }}</h3>
+
+    <h3>Pending Amount: ₹{{ pending_amount }}</h3>
+
+    <br>
+
+    <a href="{% url 'add_supplier_payment' purchase.id %}">
+        <button type="button">Add Supplier Payment</button>
+    </a>
+
+    <hr>
+
+    <h3>Purchase Items</h3>
+
+    <table border="1" cellpadding="10">
+
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Purchase Price</th>
+            <th>Total</th>
+            <th>Action</th>
+        </tr>
+
+        {% for item in items %}
+
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>₹{{ item.purchase_price }}</td>
+            <td>₹{{ item.total_price }}</td>
+
+            <td>
+                <form method="POST"
+                      action="{% url 'remove_purchase_item' item.id %}"
+                      onsubmit="return confirm('Are you sure?');">
+
+                    {% csrf_token %}
+
+                    <button type="submit">Remove</button>
+
+                </form>
+            </td>
+        </tr>
+
+        {% empty %}
+
+        <tr>
+            <td colspan="5">No Purchase Items Found</td>
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    <h3>Grand Total: ₹{{ purchase.total_amount }}</h3>
+    <hr>
+
+<h2>Supplier Payment History</h2>
+
+<table border="1" cellpadding="10">
+
+    <tr>
+        <th>Payment ID</th>
+        <th>Amount</th>
+        <th>Payment Method</th>
+        <th>Payment Date</th>
+        <th>Notes</th>
+    </tr>
+
+    {% for payment in payments %}
+
+    <tr>
+        <td>{{ payment.id }}</td>
+        <td>₹{{ payment.amount }}</td>
+        <td>{{ payment.payment_method }}</td>
+        <td>{{ payment.payment_date }}</td>
+        <td>{{ payment.notes }}</td>
+    </tr>
+
+    {% empty %}
+
+    <tr>
+        <td colspan="5">No Payments Found</td>
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+    <a href="{% url 'purchase_list' %}">Back to Purchase List</a>
+
+</body>
+</html>

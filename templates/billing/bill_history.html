@@ -1,0 +1,183 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Bill History</title>
+
+```
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+```
+
+</head>
+
+<body>
+
+```
+<!-- Sidebar -->
+<div class="sidebar">
+
+    <h2>Inventory System</h2>
+
+    <a href="/">Dashboard</a>
+
+    <a href="/products/list/">Products</a>
+    <a href="/products/add/">Add Product</a>
+    <a href="/products/stock-history/">Stock History</a>
+
+    <a href="/customers/list/">Customers</a>
+    <a href="/customers/add/">Add Customer</a>
+
+    <a href="/suppliers/list/">Suppliers</a>
+    <a href="/suppliers/add/">Add Supplier</a>
+
+    <a href="/purchases/list/">Purchase List</a>
+    <a href="/purchases/create/">Create Purchase</a>
+    <a href="/purchases/report/">Purchase Report</a>
+
+    <a href="/purchases/return/list/">Purchase Return History</a>
+    <a href="/purchases/return/create/">Create Purchase Return</a>
+    <a href="/purchases/return/report/">Purchase Return Report</a>
+
+    <a href="/purchases/payment/list/">Supplier Payment History</a>
+    <a href="/purchases/payment/report/">Supplier Payment Report</a>
+
+    <a href="/billing/">Billing</a>
+    <a href="/billing/create/">Create Bill</a>
+    <a href="/billing/history/">Bill History</a>
+
+    <a href="/admin/">Admin</a>
+
+</div>
+
+<!-- Main Content -->
+<div class="product-container">
+
+    <div class="product-header">
+        <h2>Bill History</h2>
+        <p>View and manage all customer bills and payments.</p>
+    </div>
+<!-- Bill Search -->
+<div class="product-table-section" style="margin-bottom: 20px;">
+
+    <form method="GET">
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Search by Bill ID or Customer Name"
+            value="{{ search }}"
+            style="padding: 10px; width: 300px;"
+        >
+        <label>Payment Status:</label>
+
+<select name="status" style="padding: 10px;">
+
+    <option value="">All Payments</option>
+
+    <option value="Paid"
+        {% if status == 'Paid' %}selected{% endif %}>
+        Paid
+    </option>
+
+    <option value="Pending"
+        {% if status == 'Pending' %}selected{% endif %}>
+        Pending
+    </option>
+
+</select>
+<label>From Date:</label>
+
+<input
+    type="date"
+    name="start_date"
+    value="{{ start_date }}"
+>
+
+<label>To Date:</label>
+
+<input
+    type="date"
+    name="end_date"
+    value="{{ end_date }}"
+>
+        <button type="submit">
+            Search
+        </button>
+
+        <a href="{% url 'bill_history' %}">
+            Clear
+        </a>
+
+    </form>
+
+</div>
+    <div class="product-table-section">
+
+        <table class="product-table">
+
+            <thead>
+                <tr>
+                    <th>Bill ID</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Total Amount</th>
+                    <th>Details</th>
+                    <th>Payment Status</th>
+                    <th>Update Payment</th>
+                </tr>
+            </thead>
+
+            ```
+        <tbody>
+
+            {% for bill in bills %}
+
+            <tr>
+
+                <td>{{ bill.id }}</td>
+
+                <td>{{ bill.customer.name }}</td>
+
+                <td>{{ bill.date|date:"M. d, Y" }}</td>
+
+                <td>₹{{ bill.total_amount }}</td>
+
+                <td>
+                    <a href="{% url 'bill_details' bill.id %}">
+                        View Details
+                    </a>
+                </td>
+
+                <td>{{ bill.payment_status }}</td>
+
+                <td>
+                   <form method="POST"
+      action="{% url 'update_bill_payment_status' bill.id %}">
+
+    {% csrf_token %}
+
+    <select name="payment_status">
+        <option value="Pending">Pending</option>
+        <option value="Paid">Paid</option>
+    </select>
+
+    <button type="submit">Update</button>
+
+</form>
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+                <td colspan="7">No bills available.</td>
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+

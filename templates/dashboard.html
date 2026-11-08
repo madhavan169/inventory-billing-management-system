@@ -1,0 +1,212 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inventory Dashboard</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+   <div class="sidebar">
+
+    <h2>Inventory System</h2>
+
+    <a href="/">Dashboard</a>
+
+    <a href="/products/list/">Products</a>
+    <a href="/products/add/">Add Product</a>
+    <a href="/products/stock-history/">Stock History</a>
+
+    <a href="/customers/list/">Customers</a>
+    <a href="/customers/add/">Add Customer</a>
+
+    <a href="/suppliers/list/">Suppliers</a>
+    <a href="/suppliers/add/">Add Supplier</a>
+
+    <a href="/purchases/list/">Purchase List</a>
+    <a href="/purchases/create/">Create Purchase</a>
+    <a href="/purchases/report/">Purchase Report</a>
+
+    <a href="/purchases/return/list/">Purchase Return History</a>
+    <a href="/purchases/return/create/">Create Purchase Return</a>
+    <a href="/purchases/return/report/">Purchase Return Report</a>
+
+    <a href="/purchases/payment/list/">Supplier Payment History</a>
+    <a href="/purchases/payment/report/">Supplier Payment Report</a>
+
+    <a href="/billing/">Billing</a>
+    <a href="/billing/create/">Create Bill</a>
+    <a href="/billing/history/">Bill History</a>
+
+    <a href="/admin/">Admin</a>
+
+    <form method="POST" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+</form>
+
+</div>
+
+
+    <!-- Main Content -->
+    <div class="main">
+
+        <!-- Header -->
+        <div class="header">
+            <h2>Welcome to Dashboard</h2>
+            <p>Inventory & Billing Management System</p>
+        </div>
+
+
+        <!-- Dashboard Cards -->
+        <div class="cards">
+
+            <div class="card">
+                <h3>Total Products</h3>
+                <h1>{{ total_products }}</h1>
+            </div>
+
+            <div class="card">
+                <h3>Total Customers</h3>
+                <h1>{{ total_customers }}</h1>
+            </div>
+
+            <div class="card">
+                <h3>Total Sales</h3>
+                <h1>₹{{ total_sales }}</h1>
+            </div>
+            <div class="card">
+    <h3>Out of Stock</h3>
+    <h1>{{ out_of_stock_count }}</h1>
+</div>
+
+<!-- Purchase Summary Cards -->
+
+        </div><br>
+
+        <div class=cards>
+
+    <div class="card">
+        <h3>Total Purchases</h3>
+        <h2>{{ total_purchases }}</h2>
+    </div>
+
+    <div class="card">
+        <h3>Total Purchase Amount</h3>
+        <h2>₹{{ total_purchase_amount }}</h2>
+    </div>
+
+    <div class="card">
+        <h3>Paid Purchase Amount</h3>
+        <h2>₹{{ paid_purchase_amount }}</h2>
+    </div>
+
+    <div class="card">
+        <h3>Pending Supplier Payment</h3>
+        <h2>₹{{ pending_purchase_amount }}</h2>
+    </div>
+
+</div>
+
+<!-- Purchase Return Summary -->
+
+<h2>Purchase Return Summary</h2>
+
+<div class="cards">
+
+    <div class="card">
+        <h3>Total Purchase Returns</h3>
+        <h2>{{ total_returns }}</h2>
+    </div>
+
+    <div class="card">
+        <h3>Total Return Amount</h3>
+        <h2>₹{{ total_return_amount }}</h2>
+    </div>
+
+</div>
+        <!-- Low Stock Section -->
+        <div class="low-stock-section">
+
+            <h3 class="low-stock-count">
+                Low Stock Products: {{ low_stock_count }}
+            </h3>
+
+            <h2>Low Stock Alert</h2>
+
+
+            <!-- Low Stock Table -->
+            <table class="low-stock-table">
+
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Available Stock</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+
+                    {% for product in low_stock_products %}
+
+                    <tr>
+
+                        <td>{{ product.name }}</td>
+
+                        <td>{{ product.category }}</td>
+
+                        <td>{{ product.stock }}</td>
+
+                        <td>
+                            {% if product.stock == 0 %}
+
+                                <span class="out-stock">
+                                    Out of Stock
+                                </span>
+
+                            {% else %}
+
+                                <span class="low-stock">
+                                    Low Stock
+                                </span>
+
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <a class="update-btn"
+                               href="{% url 'update_product' product.id %}">
+                                Update Stock
+                            </a>
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="5" class="empty-message">
+                            All Products Have Sufficient Stock
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

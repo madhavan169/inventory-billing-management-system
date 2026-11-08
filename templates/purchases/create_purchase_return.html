@@ -1,0 +1,51 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Purchase Return</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <div class="sidebar">
+
+        <h2>Inventory System</h2>
+
+        <a href="/">Dashboard</a>
+        <a href="/products/list/">Products</a>
+        <a href="/suppliers/list/">Suppliers</a>
+        <a href="/purchases/create/">Create Purchase</a>
+        <a href="/purchases/list/">Purchase List</a>
+        <a href="/purchases/report/">Purchase Report</a>
+
+    </div>
+
+    <div class="main">
+
+        <h2>Create Purchase Return</h2>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit">
+                Create Return
+            </button>
+
+        </form>
+
+        <br>
+
+        <a href="{% url 'purchase_list' %}">
+            Back to Purchase List
+        </a>
+
+    </div>
+
+</body>
+</html>

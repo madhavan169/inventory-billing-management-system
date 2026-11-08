@@ -1,0 +1,141 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer List</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    {% if messages %}
+    {% for message in messages %}
+        <div style="
+            margin: 20px 30px 20px 270px;
+            padding: 15px;
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+            font-weight: bold;
+        ">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+    <!-- Sidebar -->
+  <div class="sidebar">
+
+    <h2>Inventory System</h2>
+
+    <a href="/">Dashboard</a>
+
+    <a href="/products/list/">Products</a>
+    <a href="/products/add/">Add Product</a>
+    <a href="/products/stock-history/">Stock History</a>
+
+    <a href="/customers/list/">Customers</a>
+    <a href="/customers/add/">Add Customer</a>
+
+    <a href="/suppliers/list/">Suppliers</a>
+    <a href="/suppliers/add/">Add Supplier</a>
+
+    <a href="/purchases/list/">Purchase List</a>
+    <a href="/purchases/create/">Create Purchase</a>
+    <a href="/purchases/report/">Purchase Report</a>
+
+    <a href="/purchases/return/list/">Purchase Return History</a>
+    <a href="/purchases/return/create/">Create Purchase Return</a>
+    <a href="/purchases/return/report/">Purchase Return Report</a>
+
+    <a href="/purchases/payment/list/">Supplier Payment History</a>
+    <a href="/purchases/payment/report/">Supplier Payment Report</a>
+
+    <a href="/billing/">Billing</a>
+    <a href="/billing/create/">Create Bill</a>
+    <a href="/billing/history/">Bill History</a>
+
+    <a href="/admin/">Admin</a>
+
+</div>
+
+    <!-- Main Content -->
+    <div class="product-container">
+
+        <div class="product-header">
+            <h2>Customer Details</h2>
+            <p>Manage your customer information</p>
+        </div>
+
+        <div class="product-table-section">
+
+            <table class="product-table">
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Email</th>
+                        <th>Update</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for customer in customers %}
+
+                    <tr>
+                        <td>{{ customer.id }}</td>
+                        <td>{{ customer.name }}</td>
+                        <td>{{ customer.phone }}</td>
+                        <td>{{ customer.address }}</td>
+                        <td>{{ customer.email }}</td>
+
+                        <td>
+                            <a class="product-update-btn"
+                               href="{% url 'update_customer' customer.id %}">
+                                Update
+                            </a>
+                        </td>
+
+                        <td>
+                            <form method="POST"
+                                  action="{% url 'delete_customer' customer.id %}">
+
+                                {% csrf_token %}
+
+                                <button class="product-delete-btn"
+                                        type="submit">
+                                    Delete
+                                </button>
+
+                            </form>
+                        </td>
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="7" class="product-empty">
+                            No Customers Available
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

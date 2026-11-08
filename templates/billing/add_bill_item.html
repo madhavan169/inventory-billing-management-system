@@ -1,0 +1,162 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Add Bill Items</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+```
+<!-- Sidebar -->
+<div class="sidebar">
+
+    <h2>Inventory System</h2>
+
+    <a href="/">Dashboard</a>
+
+    <a href="/products/list/">Products</a>
+    <a href="/products/add/">Add Product</a>
+    <a href="/products/stock-history/">Stock History</a>
+
+    <a href="/customers/list/">Customers</a>
+    <a href="/customers/add/">Add Customer</a>
+
+    <a href="/suppliers/list/">Suppliers</a>
+    <a href="/suppliers/add/">Add Supplier</a>
+
+    <a href="/purchases/list/">Purchase List</a>
+    <a href="/purchases/create/">Create Purchase</a>
+    <a href="/purchases/report/">Purchase Report</a>
+
+    <a href="/purchases/return/list/">Purchase Return History</a>
+    <a href="/purchases/return/create/">Create Purchase Return</a>
+    <a href="/purchases/return/report/">Purchase Return Report</a>
+
+    <a href="/purchases/payment/list/">Supplier Payment History</a>
+    <a href="/purchases/payment/report/">Supplier Payment Report</a>
+
+    <a href="/billing/">Billing</a>
+    <a href="/billing/create/">Create Bill</a>
+    <a href="/billing/history/">Bill History</a>
+
+    <a href="/admin/">Admin</a>
+
+</div>
+
+
+<!-- Main Content -->
+<div class="bill-items-container">
+
+    <div class="bill-items-header">
+
+        <h2>Add Products to Bill</h2>
+
+        <p>Add products and quantities to the customer's bill.</p>
+
+    </div>
+
+
+    <!-- Customer Information -->
+    <div class="bill-customer-card">
+
+        <h3>Customer Information</h3>
+
+        <p>
+            Customer Name:
+            <strong>{{ bill.customer.name }}</strong>
+        </p>
+
+        <p>
+            Bill ID:
+            <strong>#{{ bill.id }}</strong>
+        </p>
+
+    </div>
+
+
+    <!-- Add Product Form -->
+    <div class="bill-add-section">
+
+        <h3>Add Product</h3>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit" class="bill-add-btn">
+                Add Product
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- Bill Products -->
+    <!-- Bill Products -->
+<div class="bill-products-section">
+
+    <h3>Bill Products</h3>
+
+    <table class="bill-items-table">
+
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for item in items %}
+
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>₹{{ item.price }}</td>
+                <td>₹{{ item.total_price }}</td>
+
+                <td>
+                    <form method="POST"
+                          action="{% url 'remove_bill_item' bill.id item.id %}">
+
+                        {% csrf_token %}
+
+                        <button type="submit"
+                                onclick="return confirm('Are you sure you want to remove this product?')">
+                            Remove
+                        </button>
+
+                    </form>
+                </td>
+            </tr>
+
+            {% empty %}
+
+            <tr>
+                <td colspan="5" class="bill-empty">
+                    No products added yet.
+                </td>
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+</div>
+</body>
+</html>
+

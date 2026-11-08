@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Return Item</title>
+</head>
+
+<body>
+
+    <h2>Edit Purchase Return Item</h2>
+
+    <h3>Return ID: {{ item.purchase_return.id }}</h3>
+
+    <h3>Product: {{ item.purchase_item.product.name }}</h3>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">
+            Update Return Item
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="{% url 'purchase_return_details' item.purchase_return.id %}">
+        Back to Return Details
+    </a>
+
+</body>
+</html>

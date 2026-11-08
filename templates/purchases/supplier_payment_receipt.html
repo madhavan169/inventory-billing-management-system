@@ -1,0 +1,208 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Supplier Payment Receipt</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        .receipt {
+            width: 650px;
+            margin: 30px auto;
+            padding: 30px;
+            border: 2px solid #333;
+            background: white;
+        }
+
+        .receipt h2 {
+            text-align: center;
+        }
+
+        .receipt table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .receipt td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .print-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        @media print {
+            .sidebar,
+            .no-print {
+                display: none;
+            }
+
+            .main {
+                margin: 0;
+                padding: 0;
+            }
+
+            .receipt {
+                border: none;
+                width: 100%;
+                margin: 0;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="sidebar">
+
+    <h2>Inventory System</h2>
+
+    <a href="/">Dashboard</a>
+
+    <a href="/products/list/">Products</a>
+    <a href="/products/add/">Add Product</a>
+    <a href="/products/stock-history/">Stock History</a>
+
+    <a href="/customers/list/">Customers</a>
+    <a href="/customers/add/">Add Customer</a>
+
+    <a href="/suppliers/list/">Suppliers</a>
+    <a href="/suppliers/add/">Add Supplier</a>
+
+    <a href="/purchases/list/">Purchase List</a>
+    <a href="/purchases/create/">Create Purchase</a>
+    <a href="/purchases/report/">Purchase Report</a>
+
+    <a href="/purchases/return/list/">Purchase Return History</a>
+    <a href="/purchases/return/create/">Create Purchase Return</a>
+    <a href="/purchases/return/report/">Purchase Return Report</a>
+
+    <a href="/purchases/payment/list/">Supplier Payment History</a>
+    <a href="/purchases/payment/report/">Supplier Payment Report</a>
+
+    <a href="/billing/">Billing</a>
+    <a href="/billing/create/">Create Bill</a>
+    <a href="/billing/history/">Bill History</a>
+
+    <a href="/admin/">Admin</a>
+
+</div>
+
+    <div class="main">
+
+        <div class="receipt">
+
+            <h2>SUPPLIER PAYMENT RECEIPT</h2>
+
+            <hr>
+
+            <h3>Inventory System</h3>
+
+            <p>
+                <strong>Receipt ID:</strong>
+                {{ payment.id }}
+            </p>
+
+            <p>
+                <strong>Payment Date:</strong>
+                {{ payment.payment_date }}
+            </p>
+
+            <hr>
+
+            <h3>Supplier Details</h3>
+
+            <table>
+
+                <tr>
+                    <td>Supplier Name</td>
+                    <td>{{ supplier.name }}</td>
+                </tr>
+
+                <tr>
+                    <td>Company Name</td>
+                    <td>{{ supplier.company_name }}</td>
+                </tr>
+
+                <tr>
+                    <td>Phone</td>
+                    <td>{{ supplier.phone }}</td>
+                </tr>
+
+            </table>
+
+            <hr>
+
+            <h3>Payment Details</h3>
+
+            <table>
+
+                <tr>
+                    <td>Purchase ID</td>
+                    <td>{{ purchase.id }}</td>
+                </tr>
+
+                <tr>
+                    <td>Payment ID</td>
+                    <td>{{ payment.id }}</td>
+                </tr>
+
+                <tr>
+                    <td>Payment Method</td>
+                    <td>{{ payment.payment_method }}</td>
+                </tr>
+
+                <tr>
+                    <td>Payment Amount</td>
+                    <td><strong>₹{{ payment.amount }}</strong></td>
+                </tr>
+
+                <tr>
+                    <td>Notes</td>
+                    <td>{{ payment.notes|default:"-" }}</td>
+                </tr>
+
+            </table>
+
+            <br>
+
+            <h3 style="text-align: right;">
+                Total Paid: ₹{{ payment.amount }}
+            </h3>
+
+            <hr>
+
+            <p style="text-align: center;">
+                Thank You!
+            </p>
+
+            <p style="text-align: center;">
+                This is a computer-generated payment receipt.
+            </p>
+
+        </div>
+
+        <div class="no-print" style="text-align: center;">
+
+            <button class="print-btn" onclick="window.print()">
+                Print Receipt
+            </button>
+
+            <br><br>
+
+            <a href="{% url 'supplier_payment_list' %}">
+                Back to Payment List
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

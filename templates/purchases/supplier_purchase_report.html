@@ -1,0 +1,146 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Supplier Purchase Report</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <div class="sidebar">
+
+    <h2>Inventory System</h2>
+
+    <a href="/">Dashboard</a>
+
+    <a href="/products/list/">Products</a>
+    <a href="/products/add/">Add Product</a>
+    <a href="/products/stock-history/">Stock History</a>
+
+    <a href="/customers/list/">Customers</a>
+    <a href="/customers/add/">Add Customer</a>
+
+    <a href="/suppliers/list/">Suppliers</a>
+    <a href="/suppliers/add/">Add Supplier</a>
+
+    <a href="/purchases/list/">Purchase List</a>
+    <a href="/purchases/create/">Create Purchase</a>
+    <a href="/purchases/report/">Purchase Report</a>
+
+    <a href="/purchases/return/list/">Purchase Return History</a>
+    <a href="/purchases/return/create/">Create Purchase Return</a>
+    <a href="/purchases/return/report/">Purchase Return Report</a>
+
+    <a href="/purchases/payment/list/">Supplier Payment History</a>
+    <a href="/purchases/payment/report/">Supplier Payment Report</a>
+
+    <a href="/billing/">Billing</a>
+    <a href="/billing/create/">Create Bill</a>
+    <a href="/billing/history/">Bill History</a>
+
+    <a href="/admin/">Admin</a>
+
+</div>
+
+    <div class="main">
+
+        <h2>Supplier-wise Purchase Report</h2>
+        <div class="cards">
+
+    <div class="card">
+        <h3>Total Outstanding Payment</h3>
+        <h1>₹{{ total_outstanding }}</h1>
+    </div>
+
+</div>
+
+        <table class="low-stock-table">
+
+            <thead>
+    <tr>
+        <th>Supplier Name</th>
+        <th>Total Purchases</th>
+        <th>Total Purchase Amount</th>
+        <th>Paid Amount</th>
+        <th>Pending Amount</th>
+    </tr>
+</thead>
+
+            <tbody>
+
+    {% for supplier in supplier_report %}
+
+    <tr>
+        <td>{{ supplier.supplier__name }}</td>
+
+        <td>{{ supplier.total_purchases }}</td>
+
+        <td>₹{{ supplier.total_purchase_amount|default:0 }}</td>
+
+        <td>₹{{ supplier.paid_amount|default:0 }}</td>
+
+        <td>₹{{ supplier.pending_amount|default:0 }}</td>
+    </tr>
+
+    {% empty %}
+
+    <tr>
+        <td colspan="5">No Purchase Records Available</td>
+    </tr>
+
+    {% endfor %}
+
+</tbody>
+
+        </table>
+
+        <br>
+<hr>
+
+<h2>Supplier Purchase Chart</h2>
+
+<div style="width: 80%; margin: 30px auto;">
+    <canvas id="supplierChart"></canvas>
+</div>
+        <a href="/purchases/report/">Back to Purchase Report</a>
+
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const labels = [
+        {% for supplier in supplier_report %}
+            "{{ supplier.supplier__name }}",
+        {% endfor %}
+    ];
+
+    const amounts = [
+        {% for supplier in supplier_report %}
+            {{ supplier.total_amount|default:0 }},
+        {% endfor %}
+    ];
+
+    new Chart(document.getElementById('supplierChart'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Supplier Purchase Amount',
+                data: amounts,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

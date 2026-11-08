@@ -1,0 +1,164 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Purchase Report</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <div class="sidebar">
+
+    <h2>Inventory System</h2>
+
+    <a href="/">Dashboard</a>
+
+    <a href="/products/list/">Products</a>
+    <a href="/products/add/">Add Product</a>
+    <a href="/products/stock-history/">Stock History</a>
+
+    <a href="/customers/list/">Customers</a>
+    <a href="/customers/add/">Add Customer</a>
+
+    <a href="/suppliers/list/">Suppliers</a>
+    <a href="/suppliers/add/">Add Supplier</a>
+
+    <a href="/purchases/list/">Purchase List</a>
+    <a href="/purchases/create/">Create Purchase</a>
+    <a href="/purchases/report/">Purchase Report</a>
+
+    <a href="/purchases/return/list/">Purchase Return History</a>
+    <a href="/purchases/return/create/">Create Purchase Return</a>
+    <a href="/purchases/return/report/">Purchase Return Report</a>
+
+    <a href="/purchases/payment/list/">Supplier Payment History</a>
+    <a href="/purchases/payment/report/">Supplier Payment Report</a>
+
+    <a href="/billing/">Billing</a>
+    <a href="/billing/create/">Create Bill</a>
+    <a href="/billing/history/">Bill History</a>
+
+    <a href="/admin/">Admin</a>
+
+</div>
+    <div class="main">
+
+        <h2>Purchase Report</h2>
+
+        <div class="dashboard-cards">
+
+            <div class="card">
+                <h3>Total Purchases</h3>
+                <h2>{{ total_purchases }}</h2>
+            </div>
+
+            <div class="card">
+                <h3>Total Purchase Amount</h3>
+                <h2>₹{{ total_amount }}</h2>
+            </div>
+
+            <div class="card">
+                <h3>Total Products Purchased</h3>
+                <h2>{{ total_products }}</h2>
+            </div>
+            <div class="card">
+                <h3>Paid Amount</h3>
+                <h2>₹{{ paid_amount }}</h2>
+            </div>
+
+            <div class="card">
+                <h3>Pending Amount</h3>
+                <h2>₹{{ pending_amount }}</h2>
+            </div>
+
+        </div>
+        <hr>
+
+        <h2>Monthly Purchase Summary</h2>
+
+        <table class="low-stock-table">
+
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Total Purchase Amount</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for purchase in monthly_purchases %}
+                <tr>
+                    <td>{{ purchase.month|date:"F Y" }}</td>
+                    <td>₹{{ purchase.total }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2">No Purchase Records Available</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+        <br>
+
+        <h2>Monthly Purchase Chart</h2>
+
+        <div style="width: 80%; margin: 30px auto;">
+            <canvas id="purchaseChart"></canvas>
+        </div>
+        <br>
+
+        <a href="/purchases/list/">Back to Purchase List</a>
+        <a href="{% url 'supplier_purchase_report' %}">
+            <button type="button">Supplier Purchase Report</button>
+        </a>
+
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const labels = [
+        {% for purchase in monthly_purchases %}
+            "{{ purchase.month|date:'M Y' }}",
+        {% endfor %}
+    ];
+
+    const amounts = [
+        {% for purchase in monthly_purchases %}
+            {{ purchase.total }},
+        {% endfor %}
+    ];
+
+    const ctx = document.getElementById('purchaseChart');
+
+    new Chart(ctx, {
+        type: 'bar',
+
+        data: {
+            labels: labels,
+
+            datasets: [{
+                label: 'Monthly Purchase Amount',
+                data: amounts,
+                borderWidth: 1
+            }]
+        },
+
+        options: {
+            responsive: true,
+
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+
+</html>

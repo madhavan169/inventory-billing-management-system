@@ -1,0 +1,194 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Billing Dashboard</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        .billing-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .billing-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .billing-card h3 {
+            margin-bottom: 15px;
+            color: #475569;
+        }
+
+        .billing-card h2 {
+            color: #1e293b;
+        }
+
+        .billing-buttons {
+            margin-top: 30px;
+        }
+
+        .billing-buttons a {
+            display: inline-block;
+            padding: 12px 20px;
+            margin-right: 10px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+    <h2>Inventory System</h2>
+
+    <a href="/">Dashboard</a>
+
+    <a href="/products/list/">Products</a>
+    <a href="/products/add/">Add Product</a>
+    <a href="/products/stock-history/">Stock History</a>
+
+    <a href="/customers/list/">Customers</a>
+    <a href="/customers/add/">Add Customer</a>
+
+    <a href="/suppliers/list/">Suppliers</a>
+    <a href="/suppliers/add/">Add Supplier</a>
+
+    <a href="/purchases/list/">Purchase List</a>
+    <a href="/purchases/create/">Create Purchase</a>
+    <a href="/purchases/report/">Purchase Report</a>
+
+    <a href="/purchases/return/list/">Purchase Return History</a>
+    <a href="/purchases/return/create/">Create Purchase Return</a>
+    <a href="/purchases/return/report/">Purchase Return Report</a>
+
+    <a href="/purchases/payment/list/">Supplier Payment History</a>
+    <a href="/purchases/payment/report/">Supplier Payment Report</a>
+
+    <a href="/billing/">Billing</a>
+    <a href="/billing/create/">Create Bill</a>
+    <a href="/billing/history/">Bill History</a>
+
+    <a href="/admin/">Admin</a>
+
+</div>
+
+    <!-- Main Content -->
+    <div class="product-container">
+
+        <div class="product-header">
+
+            <h2>Billing Dashboard</h2>
+
+            <p>Manage customer bills and payments.</p>
+
+        </div>
+
+        <!-- Billing Cards -->
+        <div class="billing-cards">
+
+            <div class="billing-card">
+                <h3>Total Bills</h3>
+                <h2>{{ total_bills }}</h2>
+            </div>
+
+            <div class="billing-card">
+                <h3>Total Sales</h3>
+                <h2>₹{{ total_sales }}</h2>
+            </div>
+
+            <div class="billing-card">
+                <h3>Paid Amount</h3>
+                <h2>₹{{ paid_amount }}</h2>
+            </div>
+
+            <div class="billing-card">
+                <h3>Pending Amount</h3>
+                <h2>₹{{ pending_amount }}</h2>
+            </div>
+
+        </div>
+         <!-- Recent Bills -->
+<div class="product-table-section" style="margin-top: 30px;">
+
+    <h3>Recent Bills</h3>
+
+    <table class="product-table">
+
+        <thead>
+            <tr>
+                <th>Bill ID</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for bill in recent_bills %}
+
+            <tr>
+
+                <td>{{ bill.id }}</td>
+
+                <td>{{ bill.customer.name }}</td>
+
+                <td>{{ bill.date|date:"d-m-Y" }}</td>
+
+                <td>₹{{ bill.total_amount }}</td>
+
+                <td>{{ bill.payment_status }}</td>
+
+                <td>
+                    <a href="{% url 'bill_details' bill.id %}">
+                        View Details
+                    </a>
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+                <td colspan="6">No bills available.</td>
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+        <!-- Buttons -->
+        <div class="billing-buttons">
+
+            <a href="{% url 'create_bill' %}">
+                Create New Bill
+            </a>
+
+            <a href="{% url 'bill_history' %}">
+                View Bill History
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

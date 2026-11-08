@@ -1,0 +1,145 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Bill Details</title>
+
+```
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+```
+
+</head>
+
+<body>
+
+```
+<!-- Sidebar -->
+<div class="sidebar no-print">
+
+    <h2>Inventory System</h2>
+
+    <a href="/">Dashboard</a>
+
+    <a href="/products/list/">Products</a>
+    <a href="/products/add/">Add Product</a>
+    <a href="/products/stock-history/">Stock History</a>
+
+    <a href="/customers/list/">Customers</a>
+    <a href="/customers/add/">Add Customer</a>
+
+    <a href="/suppliers/list/">Suppliers</a>
+    <a href="/suppliers/add/">Add Supplier</a>
+
+    <a href="/purchases/list/">Purchase List</a>
+    <a href="/purchases/create/">Create Purchase</a>
+    <a href="/purchases/report/">Purchase Report</a>
+
+    <a href="/purchases/return/list/">Purchase Return History</a>
+    <a href="/purchases/return/create/">Create Purchase Return</a>
+    <a href="/purchases/return/report/">Purchase Return Report</a>
+
+    <a href="/purchases/payment/list/">Supplier Payment History</a>
+    <a href="/purchases/payment/report/">Supplier Payment Report</a>
+
+    <a href="/billing/">Billing</a>
+    <a href="/billing/create/">Create Bill</a>
+    <a href="/billing/history/">Bill History</a>
+
+    <a href="/admin/">Admin</a>
+
+</div>
+
+<!-- Invoice Content -->
+<div class="invoice-container">
+
+    <div class="invoice-header">
+        <h1>INVOICE</h1>
+        <p>Inventory & Billing Management System</p>
+    </div>
+
+    <div class="invoice-info">
+
+        <div>
+            <h3>Bill Information</h3>
+            <p><strong>Bill ID:</strong> #{{ bill.id }}</p>
+            <p><strong>Date:</strong> {{ bill.date|date:"d-m-Y H:i" }}</p>
+        </div>
+
+        <div>
+            <h3>Customer Information</h3>
+            <p><strong>Name:</strong> {{ bill.customer.name }}</p>
+            <p><strong>Phone:</strong> {{ bill.customer.phone }}</p>
+        </div>
+
+    </div>
+
+    <h3 class="invoice-section-title">Purchased Products</h3>
+
+    <div class="invoice-table-section">
+
+        <table class="invoice-table">
+
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for item in items %}
+
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>₹{{ item.price }}</td>
+                    <td>₹{{ item.item_total }}</td>
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="4">No Products Found</td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+        <div class="invoice-total">
+
+            <h2>
+                Grand Total: ₹{{ bill.total_amount }}
+            </h2>
+
+            <p>
+                Payment Status:
+                <strong>{{ bill.payment_status }}</strong>
+            </p>
+
+        </div>
+
+        <div class="invoice-actions no-print">
+
+            <button onclick="window.print()">
+                Print Invoice
+            </button>
+
+            <a href="{% url 'bill_history' %}">
+                Back to Bill History
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,137 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Supplier Payment Report</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+   <div class="sidebar">
+
+    <h2>Inventory System</h2>
+
+    <a href="/">Dashboard</a>
+
+    <a href="/products/list/">Products</a>
+    <a href="/products/add/">Add Product</a>
+    <a href="/products/stock-history/">Stock History</a>
+
+    <a href="/customers/list/">Customers</a>
+    <a href="/customers/add/">Add Customer</a>
+
+    <a href="/suppliers/list/">Suppliers</a>
+    <a href="/suppliers/add/">Add Supplier</a>
+
+    <a href="/purchases/list/">Purchase List</a>
+    <a href="/purchases/create/">Create Purchase</a>
+    <a href="/purchases/report/">Purchase Report</a>
+
+    <a href="/purchases/return/list/">Purchase Return History</a>
+    <a href="/purchases/return/create/">Create Purchase Return</a>
+    <a href="/purchases/return/report/">Purchase Return Report</a>
+
+    <a href="/purchases/payment/list/">Supplier Payment History</a>
+    <a href="/purchases/payment/report/">Supplier Payment Report</a>
+
+    <a href="/billing/">Billing</a>
+    <a href="/billing/create/">Create Bill</a>
+    <a href="/billing/history/">Bill History</a>
+
+    <a href="/admin/">Admin</a>
+
+</div>
+
+    <div class="main">
+
+        <h2>Supplier Payment Report</h2>
+
+        <hr>
+
+        <!-- Payment Summary -->
+
+        <h3>Payment Summary</h3>
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>Total Payments</h3>
+                <h2>{{ total_payments }}</h2>
+            </div>
+
+            <div class="card">
+                <h3>Total Paid Amount</h3>
+                <h2>₹{{ total_paid }}</h2>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <!-- Payment Method Summary -->
+
+        <h3>Payment Method Summary</h3>
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>Cash Payments</h3>
+                <h2>₹{{ cash_total }}</h2>
+            </div>
+
+            <div class="card">
+                <h3>UPI Payments</h3>
+                <h2>₹{{ upi_total }}</h2>
+            </div>
+
+            <div class="card">
+                <h3>Bank Transfer</h3>
+                <h2>₹{{ bank_total }}</h2>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <!-- Detailed Report -->
+
+        <h3>Payment Method Details</h3>
+
+        <table border="1" cellpadding="10" cellspacing="0">
+
+            <tr>
+                <th>Payment Method</th>
+                <th>Number of Payments</th>
+                <th>Total Amount</th>
+            </tr>
+
+            {% for item in payment_methods %}
+
+            <tr>
+                <td>{{ item.payment_method }}</td>
+                <td>{{ item.payment_count }}</td>
+                <td>₹{{ item.total_amount }}</td>
+            </tr>
+
+            {% empty %}
+
+            <tr>
+                <td colspan="3">No Payment Records Found</td>
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+        <br>
+
+        <a href="{% url 'supplier_payment_list' %}">
+            Back to Supplier Payment List
+        </a>
+
+    </div>
+
+</body>
+</html>

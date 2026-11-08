@@ -1,0 +1,91 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Supplier Payment</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+   <div class="sidebar">
+
+    <h2>Inventory System</h2>
+
+    <a href="/">Dashboard</a>
+
+    <a href="/products/list/">Products</a>
+    <a href="/products/add/">Add Product</a>
+    <a href="/products/stock-history/">Stock History</a>
+
+    <a href="/customers/list/">Customers</a>
+    <a href="/customers/add/">Add Customer</a>
+
+    <a href="/suppliers/list/">Suppliers</a>
+    <a href="/suppliers/add/">Add Supplier</a>
+
+    <a href="/purchases/list/">Purchase List</a>
+    <a href="/purchases/create/">Create Purchase</a>
+    <a href="/purchases/report/">Purchase Report</a>
+
+    <a href="/purchases/return/list/">Purchase Return History</a>
+    <a href="/purchases/return/create/">Create Purchase Return</a>
+    <a href="/purchases/return/report/">Purchase Return Report</a>
+
+    <a href="/purchases/payment/list/">Supplier Payment History</a>
+    <a href="/purchases/payment/report/">Supplier Payment Report</a>
+
+    <a href="/billing/">Billing</a>
+    <a href="/billing/create/">Create Bill</a>
+    <a href="/billing/history/">Bill History</a>
+
+    <a href="/admin/">Admin</a>
+
+</div>
+    <div class="main">
+
+        <h2>Add Supplier Payment</h2>
+        <hr>
+
+        <h3>Purchase ID: {{ purchase.id }}</h3>
+        <h3>Supplier: {{ purchase.supplier.name }}</h3>
+        <h3>Purchase Amount: ₹{{ purchase.total_amount }}</h3>
+        <h3>Pending Amount: ₹{{ pending_amount }}</h3>
+
+        <hr>
+
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color: red; font-weight: bold;">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        {% endif %}
+
+        {% if error_message %}
+            <p style="color: red; font-weight: bold;">
+                {{ error_message }}
+            </p>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit">
+                Save Payment
+            </button>
+        </form>
+
+        <br>
+
+        <a href="{% url 'purchase_details' purchase.id %}">
+            Back to Purchase Details
+        </a>
+
+    </div>
+
+</body>
+</html>

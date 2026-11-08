@@ -1,0 +1,150 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product List</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    {% if messages %}
+    {% for message in messages %}
+        <div style="
+            margin: 20px 30px 20px 270px;
+            padding: 15px 20px;
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+        ">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+    
+    
+
+    <div class="sidebar">
+
+    <h2>Inventory System</h2>
+
+    <a href="/">Dashboard</a>
+
+    <a href="/products/list/">Products</a>
+    <a href="/products/add/">Add Product</a>
+    <a href="/products/stock-history/">Stock History</a>
+
+    <a href="/customers/list/">Customers</a>
+    <a href="/customers/add/">Add Customer</a>
+
+    <a href="/suppliers/list/">Suppliers</a>
+    <a href="/suppliers/add/">Add Supplier</a>
+
+    <a href="/purchases/list/">Purchase List</a>
+    <a href="/purchases/create/">Create Purchase</a>
+    <a href="/purchases/report/">Purchase Report</a>
+
+    <a href="/purchases/return/list/">Purchase Return History</a>
+    <a href="/purchases/return/create/">Create Purchase Return</a>
+    <a href="/purchases/return/report/">Purchase Return Report</a>
+
+    <a href="/purchases/payment/list/">Supplier Payment History</a>
+    <a href="/purchases/payment/report/">Supplier Payment Report</a>
+
+    <a href="/billing/">Billing</a>
+    <a href="/billing/create/">Create Bill</a>
+    <a href="/billing/history/">Bill History</a>
+
+    <a href="/admin/">Admin</a>
+
+</div>
+    <div class="product-container">
+
+        <div class="product-header">
+            <h2>Available Products</h2>
+            <p>Manage your inventory products</p>
+        </div>
+
+        <div class="product-table-section">
+
+            <table class="product-table">
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Stock Status</th>
+                        <th>Update</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for product in products %}
+
+                    <tr>
+                        <td>{{ product.id }}</td>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.category }}</td>
+                        <td>₹{{ product.price }}</td>
+                        <td>{{ product.stock }}</td>
+                        <td>
+    {% if product.stock_status == 'Out of Stock' %}
+        <span style="color: red;">Out of Stock</span>
+
+    {% elif product.stock_status == 'Low Stock' %}
+        <span style="color: orange;">Low Stock</span>
+
+    {% else %}
+        <span style="color: green;">In Stock</span>
+    {% endif %}
+</td>
+
+                        <td>
+                            <a class="product-update-btn"
+                               href="{% url 'update_product' product.id %}">
+                                Update
+                            </a>
+                        </td>
+
+                        <td>
+                            <form method="POST"
+                                  action="{% url 'delete_product' product.id %}">
+                                {% csrf_token %}
+
+                                <button class="product-delete-btn"
+                                        type="submit">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="8" class="product-empty">
+                            No Products Available
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
